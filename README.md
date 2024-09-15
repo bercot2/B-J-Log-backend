@@ -4,5 +4,5 @@
 - waitress-serve --host=0.0.0.0 --port=5000 wsgi:app
 
 # Rodar migrate
-- flask db -m "descricao do migrate"
+- flask db migrate -m "descricao do migrate"
 - flask db upgrade
