@@ -6,10 +6,11 @@ from app.exceptions.exceptions import ExceptionNoDataFound
 
 
 class Serializer:
-    def __init__(self, query=None) -> None:
-        self.page = 0
-        self.per_page = 0
+
+    def __init__(self, query, page=0, per_page=0) -> None:
         self.query = query
+        self.page = page
+        self.per_page = per_page
 
     def model_to_dict(self, model):
         """Converte um objeto SQLAlchemy em um dicionário."""
@@ -28,6 +29,12 @@ class Serializer:
             return True
 
         return False
+
+    def serialize(self):
+        if self.query.count() > 1:
+            return [self.model_to_dict(model) for model in self.query.all()]
+        else:
+            return self.model_to_dict(self.query.first())
 
     def paginate(self):
         paginated_query = self.query.paginate(
@@ -56,7 +63,4 @@ class Serializer:
         if serializer.is_paginate():
             return serializer.paginate()
 
-        if query.count() > 1:
-            return [serializer.model_to_dict(model) for model in query.all()]
-        else:
-            return serializer.model_to_dict(query.first())
+        return serializer.serialize()
