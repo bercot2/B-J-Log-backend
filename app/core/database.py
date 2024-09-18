@@ -21,15 +21,15 @@ class ModelBase(db.Model):
 
         class ModelSchema(SQLAlchemyAutoSchema):
 
-            @classmethod
-            def get_schema_only_fields(cls, fields):
-                schema = cls()
+            def get_schema_only_fields(self, fields):
+                fields = list(
+                    filter(lambda field: self.fields.get(field.strip()), fields)
+                )
 
                 if fields:
-                    fields = list(map(lambda field: field.strip(), fields))
-                    schema = cls(only=fields)
+                    return self.__class__(only=fields)
 
-                return schema
+                return self
 
             class Meta:
                 model = cls
