@@ -6,20 +6,23 @@ from flask import request, jsonify
 from sqlalchemy_filters import apply_filters
 
 from app.core.constants_config import FIELDS_LOOKUPS, ALL_FIELDS
-from app.core.database import ModelBase, set_query
+from app.core.database import Model, ModelBase, Query
 from app.core.enums import OperatorEnum
 
 
 def filter_fields(
-    base_query: Type[ModelBase] | Callable, search_fields: list | Literal["__all__"]
+    base_model: Type[ModelBase] | Callable, search_fields: list | Literal["__all__"]
 ):
     def wrapper(func):
         @wraps(func)
         def decorated(*args, **kwargs):
+
+            Model.set_model(base_model)
+
             query = (
-                base_query.query
-                if issubclass(base_query, ModelBase)
-                else base_query(**kwargs)
+                base_model.query
+                if issubclass(base_model, ModelBase)
+                else base_model(**kwargs)
             )
 
             filter_args = {
@@ -56,9 +59,9 @@ def filter_fields(
                 except Exception as e:
                     return jsonify({"error": str(e)}), HTTPStatus.BAD_REQUEST
 
-                set_query(filtered_query)
+                Query.set_query(filtered_query)
             else:
-                set_query(query)
+                Query.set_query(query)
 
             return func(*args, **kwargs)
 
