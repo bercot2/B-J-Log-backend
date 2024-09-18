@@ -6,3 +6,4 @@
 # Rodar migrate
 - flask db migrate -m "descricao do migrate"
 - flask db upgrade
+- flask db downgrade [#version]
