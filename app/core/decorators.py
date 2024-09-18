@@ -8,6 +8,7 @@ from sqlalchemy_filters import apply_filters
 from app.core.constants_config import FIELDS_LOOKUPS, ALL_FIELDS
 from app.core.database import Model, ModelBase, Query
 from app.core.enums import OperatorEnum
+from app.exceptions.exceptions import ExceptionBadRequest
 
 
 def filter_fields(
@@ -57,7 +58,7 @@ def filter_fields(
                 try:
                     filtered_query = apply_filters(query, filter_spec)
                 except Exception as e:
-                    return jsonify({"error": str(e)}), HTTPStatus.BAD_REQUEST
+                    raise ExceptionBadRequest(str(e))
 
                 Query.set_query(filtered_query)
             else:

@@ -29,3 +29,15 @@ class ExceptionNoDataFound(ExceptionBase):
         *args: object
     ):
         super().__init__(message, status_code, *args)
+
+
+class ExceptionBadRequest(ExceptionBase):
+    """Exceção levantada quando ocorre um erro no request da transação."""
+
+    def __init__(
+        self,
+        message="Erro na requisição",
+        status_code: HTTPStatus = HTTPStatus.BAD_REQUEST,
+        *args: object
+    ):
+        super().__init__(message, status_code, *args)

@@ -1,4 +1,5 @@
 from flask import request
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from app.exceptions.exceptions import ExceptionNoDataFound
 
@@ -44,7 +45,7 @@ class Serializer:
         return response
 
     @classmethod
-    def transform(cls, schema, query):
+    def transform(cls, schema: SQLAlchemyAutoSchema, query):
         if not schema:
             raise ValueError("Schema é um parâmetro obrigatório")
 
@@ -53,6 +54,11 @@ class Serializer:
 
         if query.count() == 0:
             raise ExceptionNoDataFound()
+
+        if request.args.get("fields", None):
+            schema = schema.get_schema_only_fields(
+                request.args.get("fields").split(",")
+            )
 
         serializer = cls(schema, query)
 

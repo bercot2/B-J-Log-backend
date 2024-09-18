@@ -20,6 +20,17 @@ class ModelBase(db.Model):
         """Retorna o schema Marshmallow associado ao modelo"""
 
         class ModelSchema(SQLAlchemyAutoSchema):
+
+            @classmethod
+            def get_schema_only_fields(cls, fields):
+                schema = cls()
+
+                if fields:
+                    fields = list(map(lambda field: field.strip(), fields))
+                    schema = cls(only=fields)
+
+                return schema
+
             class Meta:
                 model = cls
                 load_instance = True
