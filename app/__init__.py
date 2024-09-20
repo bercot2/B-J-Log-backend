@@ -1,9 +1,9 @@
 from flask import Flask
 
-from app.exceptions.config_exceptions import init_error_handlers
-from router.router import register_routes
+from .exceptions.config_exceptions import init_error_handlers
+from .router.router import register_routes
 from .core.database import db, migrate
-from .auth import jwt, register_authentication_hooks
+from .modules.auth import jwt, register_authentication_hooks
 
 
 def create_app():
