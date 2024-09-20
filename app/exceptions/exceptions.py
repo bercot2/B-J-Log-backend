@@ -41,3 +41,15 @@ class ExceptionBadRequest(ExceptionBase):
         *args: object
     ):
         super().__init__(message, status_code, *args)
+
+
+class ExceptionNotFoundAuthentication(ExceptionBase):
+    """Exceção levantada quando Token enviado não é encontrado no banco de dados"""
+
+    def __init__(
+        self,
+        message="Chave de Acesso inválido ou não identificado no banco de dados",
+        status_code: HTTPStatus = HTTPStatus.UNAUTHORIZED,
+        *args: object
+    ):
+        super().__init__(message, status_code, *args)
