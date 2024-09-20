@@ -41,6 +41,12 @@ class ModelBase(db.Model):
 
         return ModelSchema()
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+        return self
+
 
 class Model:
     @staticmethod

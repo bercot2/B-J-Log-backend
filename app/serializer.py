@@ -6,11 +6,12 @@ from app.exceptions.exceptions import ExceptionNoDataFound
 
 class Serializer:
 
-    def __init__(self, schema, query, page=0, per_page=0) -> None:
+    def __init__(self, schema=None, query=None, page=0, per_page=0, model=None) -> None:
         self.schema = schema
         self.query = query
         self.page = page
         self.per_page = per_page
+        self.model = model
 
     def is_paginate(self):
         self.page = int(request.args.get("page", 0))
@@ -19,13 +20,18 @@ class Serializer:
         return self.page > 0 and self.per_page > 0
 
     def serialize(self):
-        if self.query.count() > 1:
+        if self.model:
+            return self.model.get_schema().dump(self.model)
+
+        first_item = self.query.first()
+
+        if first_item is None:
+            raise ExceptionNoDataFound()
+
+        if self.query.limit(2).count() > 1:
             return self.schema.dump(self.query.all(), many=True)
-        else:
-            first_item = self.query.first()
-            if first_item is None:
-                raise ExceptionNoDataFound()
-            return self.schema.dump(self.query.first())
+
+        return self.schema.dump(first_item)
 
     def paginate(self):
         paginated_query = self.query.paginate(

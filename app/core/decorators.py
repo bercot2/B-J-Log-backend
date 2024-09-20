@@ -27,14 +27,16 @@ def filter_fields(
             )
 
             filter_args = {
-                k: v for (k, v) in request.args.items() if k.__contains__("__")
+                key: value
+                for (key, value) in request.args.items()
+                if key.__contains__("__")
             }
 
             filter_spec = []
 
             if filter_args:
-                for k, v in filter_args.items():
-                    field, lookup = k.split("__")
+                for key, value in filter_args.items():
+                    field, lookup = key.split("__")
                     if search_fields == ALL_FIELDS or field in search_fields:
                         operator_like = (
                             True
@@ -51,7 +53,7 @@ def filter_fields(
                             {
                                 "field": field,
                                 "op": FIELDS_LOOKUPS[lookup],
-                                "value": v if not operator_like else f"%{v}%",
+                                "value": value if not operator_like else f"%{value}%",
                             }
                         )
 
