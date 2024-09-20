@@ -6,8 +6,8 @@ from http import HTTPStatus
 from flask import Blueprint, session, request
 from flask_jwt_extended import create_access_token, set_access_cookies
 
-from app.cadastros.models import Usuario
-from app.integracoes.models import Authentication
+from app.modules.cadastros.models import Usuario
+from app.modules.integracoes.models import Authentication
 from app.core.functions import check_password, is_email
 from app.core.responses import AppResponse
 

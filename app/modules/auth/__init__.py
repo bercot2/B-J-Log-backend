@@ -5,7 +5,7 @@ from flask import request
 from flask_jwt_extended import JWTManager
 
 from app.core.responses import AppResponse
-from app.integracoes.models import Authentication
+from app.modules.integracoes.models import Authentication
 
 jwt = JWTManager()
 
