@@ -1,7 +1,7 @@
 import jwt as jwt_d
 
 from http import HTTPStatus
-from flask import Flask, request
+from flask import Flask, request, session
 from flask_jwt_extended import JWTManager
 
 from app.core.responses import AppResponse
@@ -11,21 +11,15 @@ jwt = JWTManager()
 
 
 def decode_token(token, secret_key=None, **kwargs):
-    if not secret_key:
-        return jwt_d.decode(token, algorithms=["HS256"], **kwargs)
-
     return jwt_d.decode(token, secret_key, algorithms=["HS256"], **kwargs)
 
 
 def validate_bearer_token(bearer_token):
-    partial_decoded = decode_token(bearer_token, options={"verify_signature": False})
-    nome = partial_decoded.get("nome")
-    chave_acesso = partial_decoded.get("chave_acesso")
+    if session["integration_token"]["token"] != bearer_token:
+        return None, "Token inválido, utilize o último token gerado!"
 
-    if not chave_acesso:
-        return None, "Token inválido, chave de acesso ausente"
+    authentication = Authentication(**session["integration_token"]["authentication"])
 
-    authentication = Authentication.get_authentication(nome, chave_acesso)
     return decode_token(bearer_token, authentication.secret_key), None
 
 

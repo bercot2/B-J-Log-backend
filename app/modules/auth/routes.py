@@ -10,6 +10,7 @@ from app.modules.cadastros.models import Usuario
 from app.modules.integracoes.models import Authentication
 from app.core.functions import check_password, is_email
 from app.core.responses import AppResponse
+from app.serializer import Serializer
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -26,9 +27,14 @@ def generate_token():
         "exp": datetime.now(timezone.utc) + timedelta(hours=1),
     }
 
-    authentication = jwt.encode(payload, authentication.secret_key, algorithm="HS256")
+    token = jwt.encode(payload, authentication.secret_key, algorithm="HS256")
 
-    return AppResponse({"token": authentication}), HTTPStatus.OK
+    session["integration_token"] = {
+        "token": token,
+        "authentication": Serializer(model=authentication).serialize(),
+    }
+
+    return AppResponse({"token": token}), HTTPStatus.OK
 
 
 @auth_bp.post("/login")
