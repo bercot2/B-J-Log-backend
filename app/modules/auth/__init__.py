@@ -15,7 +15,15 @@ def decode_token(token, secret_key=None, **kwargs):
 
 
 def validate_bearer_token(bearer_token):
-    if session["integration_token"]["token"] != bearer_token:
+    integration_token = session.get("integration_token", None)
+
+    if not integration_token:
+        return (
+            None,
+            "Autenticação falhou: o token não foi gerado antes da tentativa de acesso.",
+        )
+
+    if integration_token["token"] != bearer_token:
         return None, "Token inválido, utilize o último token gerado!"
 
     authentication = Authentication(**session["integration_token"]["authentication"])

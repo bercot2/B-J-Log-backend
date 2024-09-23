@@ -53,3 +53,27 @@ class ExceptionNotFoundAuthentication(ExceptionBase):
         *args: object
     ):
         super().__init__(message, status_code, *args)
+
+
+class ExceptionNotFoundModelG(ExceptionBase):
+    """Exceção levantada quando o Model na variável G do Flask não é encontrada"""
+
+    def __init__(
+        self,
+        message="Model não encontrado!",
+        status_code: HTTPStatus = HTTPStatus.NOT_FOUND,
+        *args: object
+    ):
+        super().__init__(message, status_code, *args)
+
+
+class ExceptionSerializer(ExceptionBase):
+    """Exceção levantada referente aos erros no serializer"""
+
+    def __init__(
+        self,
+        message=None,
+        status_code: HTTPStatus = HTTPStatus.BAD_REQUEST,
+        *args: object
+    ):
+        super().__init__(message, status_code, *args)

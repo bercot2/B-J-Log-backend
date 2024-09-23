@@ -1,8 +1,7 @@
 from functools import wraps
 from typing import Callable, Literal, Type
-from http import HTTPStatus
 
-from flask import request, jsonify
+from flask import request
 from sqlalchemy_filters import apply_filters
 
 from app.core.constants_config import FIELDS_LOOKUPS, ALL_FIELDS
@@ -12,7 +11,9 @@ from app.exceptions.exceptions import ExceptionBadRequest
 
 
 def filter_fields(
-    base_model: Type[ModelBase] | Callable, search_fields: list | Literal["__all__"]
+    base_model: Type[ModelBase],
+    search_fields: list | Literal["__all__"],
+    override_query: Callable = None,
 ):
     def wrapper(func):
         @wraps(func)
@@ -20,11 +21,10 @@ def filter_fields(
 
             Model.set_model(base_model)
 
-            query = (
-                base_model.query
-                if issubclass(base_model, ModelBase)
-                else base_model(**kwargs)
-            )
+            if not override_query:
+                query = base_model.query
+            else:
+                query = override_query(**kwargs)
 
             filter_args = {
                 key: value

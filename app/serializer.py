@@ -1,7 +1,9 @@
 from flask import request
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from sqlalchemy.orm import Query
+from sqlalchemy.engine.row import Row
 
-from app.exceptions.exceptions import ExceptionNoDataFound
+from app.core.schemas import DynamicModelSchema
+from app.exceptions.exceptions import ExceptionNoDataFound, ExceptionSerializer
 
 
 class Serializer:
@@ -31,7 +33,9 @@ class Serializer:
         if self.query.limit(2).count() > 1:
             return self.schema.dump(self.query.all(), many=True)
 
-        return self.schema.dump(first_item)
+        return self.schema.dump(
+            first_item if not isinstance(first_item, Row) else tuple(first_item)
+        )
 
     def paginate(self):
         paginated_query = self.query.paginate(
@@ -51,12 +55,12 @@ class Serializer:
         return response
 
     @classmethod
-    def transform(cls, schema: SQLAlchemyAutoSchema, query):
+    def transform(cls, schema: DynamicModelSchema, query: Query):
         if not schema:
-            raise ValueError("Schema é um parâmetro obrigatório")
+            raise ExceptionSerializer(message="Schema é um parâmetro obrigatório")
 
         if not query:
-            raise ValueError("Query é um parâmetro obrigatório")
+            raise ExceptionSerializer(message="Query é um parâmetro obrigatório")
 
         if query.count() == 0:
             raise ExceptionNoDataFound()

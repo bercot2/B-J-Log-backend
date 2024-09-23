@@ -5,16 +5,22 @@ from app.core.decorators import filter_fields
 from app.core.functions import hash_password
 from app.core.responses import AppResponse
 from app.serializer import Serializer
-from ..models import Usuario
+from ..models import Empresa, Usuario, UsuarioEmpresa
 
 usuarios_bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
 
 
 @usuarios_bp.get("/")
-@filter_fields(Usuario, "__all__")
+@filter_fields(
+    base_model=Usuario, override_query=Usuario.get_user_empresa, search_fields="__all__"
+)
 def get_usuarios():
     serializer = Serializer.transform(
-        Model.get_schema(fields=["id", "nome", "email"]), Query.get_queryset()
+        schema=Model.get_schema(
+            fields_list=["id", "nome", "email"],
+            empresa=Empresa.get_schema(fields_list=["id", "cnpj", "razao_social"]),
+        ),
+        query=Query.get_queryset(),
     )
 
     return AppResponse(serializer), HTTPStatus.OK
