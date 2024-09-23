@@ -10,9 +10,9 @@ from app.core.enums import OperatorEnum
 from app.exceptions.exceptions import ExceptionBadRequest
 
 
-def filter_fields(
+def queryset(
     base_model: Type[ModelBase],
-    search_fields: list | Literal["__all__"],
+    filter_fields: list | Literal["__all__"],
     override_query: Callable = None,
 ):
     def wrapper(func):
@@ -37,7 +37,7 @@ def filter_fields(
             if filter_args:
                 for key, value in filter_args.items():
                     field, lookup = key.split("__")
-                    if search_fields == ALL_FIELDS or field in search_fields:
+                    if filter_fields == ALL_FIELDS or field in filter_fields:
                         operator_like = (
                             True
                             if FIELDS_LOOKUPS[lookup]
