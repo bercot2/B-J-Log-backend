@@ -15,11 +15,15 @@ usuarios_bp = Blueprint("usuarios", __name__, url_prefix="/usuarios")
     base_model=Usuario, override_query=Usuario.get_user_empresa, filter_fields="__all__"
 )
 def get_usuarios():
-    serializer = Serializer.transform(
-        schema=Model.get_schema(
-            fields_list=["id", "nome", "email"],
-            empresa=Empresa.get_schema(fields_list=["id", "cnpj", "razao_social"]),
+    schema = Model.get_schema(
+        fields_list=["id", "nome", "email"],
+        empresas=Empresa.get_schema(
+            fields_list=["id", "cnpj", "razao_social", "nome_fantasia"], many=True
         ),
+    )
+
+    serializer = Serializer.transform(
+        schema=schema,
         query=Query.get_queryset(),
     )
 

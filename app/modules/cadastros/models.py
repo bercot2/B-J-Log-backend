@@ -13,18 +13,14 @@ class Usuario(ModelBase):
     is_staff: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    empresas: Mapped[List["UsuarioEmpresa"]] = relationship(
-        "UsuarioEmpresa", back_populates="usuario"
+    empresas: Mapped[List["Empresa"]] = relationship(
+        "Empresa", secondary="usuario_empresa", back_populates="usuarios"
     )
 
     @staticmethod
     def get_user_empresa(**kwargs):
-        query = (
-            Usuario.query.select_from(Usuario)
-            .join(UsuarioEmpresa)
-            .join(Empresa)
-            .add_columns(Empresa)
-        )
+        query = Usuario.query.select_from(Usuario).options(joinedload(Usuario.empresas))
+
         return query
 
 
@@ -54,8 +50,8 @@ class Empresa(ModelBase):
         "EmpresaContato", back_populates="empresa"
     )
 
-    usuarios: Mapped[List["UsuarioEmpresa"]] = relationship(
-        "UsuarioEmpresa", back_populates="empresa"
+    usuarios: Mapped[List["Usuario"]] = relationship(
+        "Usuario", secondary="usuario_empresa", back_populates="empresas"
     )
 
 
@@ -111,6 +107,3 @@ class UsuarioEmpresa(ModelBase):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     id_empresa: Mapped[int] = mapped_column(ForeignKey("empresa.id"))
     id_usuario: Mapped[int] = mapped_column(ForeignKey("usuario.id"))
-
-    empresa: Mapped["Empresa"] = relationship("Empresa", back_populates="usuarios")
-    usuario: Mapped["Usuario"] = relationship("Usuario", back_populates="empresas")

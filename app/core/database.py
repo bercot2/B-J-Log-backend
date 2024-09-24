@@ -4,8 +4,8 @@ from flask import g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from marshmallow import fields
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
-from app.core.schemas import DynamicModelSchema
 from app.exceptions.exceptions import ExceptionNotFoundModelG
 
 db = SQLAlchemy()
@@ -16,10 +16,10 @@ class ModelBase(db.Model):
     __abstract__ = True
 
     @classmethod
-    def get_schema(cls, fields_list: List[str] = None, **kwargs):
+    def get_schema(cls, fields_list: List[str] = None, many=False, **kwargs):
         """Retorna o schema Marshmallow associado ao modelo"""
 
-        class ModelSchema(DynamicModelSchema):
+        class ModelSchema(SQLAlchemyAutoSchema):
             def get_schema_only_fields(self, fields):
                 fields = list(
                     filter(lambda field: self.fields.get(field.strip()), fields)
@@ -32,16 +32,21 @@ class ModelBase(db.Model):
 
             class Meta:
                 model = cls
+                include_relationships = True
                 load_instance = True
                 include_fk = True
 
         schema_instance = (
-            ModelSchema(only=fields_list) if fields_list else ModelSchema()
+            ModelSchema(only=fields_list, many=many)
+            if fields_list
+            else ModelSchema(many=many)
         )
 
         for name_key, schema in kwargs.items():
             if schema:
-                schema_instance.fields[name_key] = fields.Nested(schema)
+                schema_instance.fields[name_key] = fields.Nested(schema, many=many)
+                schema_instance.dump_fields[name_key] = fields.Nested(schema, many=many)
+                schema_instance.load_fields[name_key] = fields.Nested(schema, many=many)
 
         return schema_instance
 

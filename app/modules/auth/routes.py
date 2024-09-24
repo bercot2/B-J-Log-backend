@@ -60,7 +60,12 @@ def login():
             HTTPStatus.UNAUTHORIZED,
         )
 
-    session["user_id"] = user.id
+    session["user"] = user.get_schema(
+        fields_list=["id", "nome", "email", "username", "is_staff", "is_superuser"]
+    ).dump(user)
+    session["user_empresas"] = [
+        empresa.get_schema().dump(empresa) for empresa in user.empresas
+    ]
 
     # Gera o token JWT
     access_token = create_access_token(identity=user.id)
