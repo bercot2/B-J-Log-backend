@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from .exceptions.config_exceptions import init_error_handlers
 from .router.router import register_routes
@@ -8,6 +9,11 @@ from .modules.auth import jwt, register_authentication_hooks
 
 def create_app():
     app = Flask(__name__)
+    CORS(
+        app,
+        supports_credentials=True,
+        resources={r"/*": {"origins": "http://localhost:5173"}},
+    )
 
     app.config.from_object('app.core.config.Config')
 

@@ -10,5 +10,5 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=2)
     PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
     SESSION_PERMANENT = False
-    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False  # mudar para True quando Prod
     SESSION_COOKIE_HTTPONLY = True
