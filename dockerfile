@@ -1,5 +1,5 @@
 # Use a imagem base do Python
-FROM python:3.11-slim
+FROM python:3.11
 
 # Defina o diretório de trabalho no container
 WORKDIR /app
@@ -14,5 +14,5 @@ COPY . .
 # Exponha a porta 8000 (ou a porta que seu app usa)
 EXPOSE 5000
 
-# Comando para rodar o servidor Python (exemplo usando Flask ou FastAPI)
-CMD ["flask", "run"]
+# Comando para rodar o servidor usando Waitress
+CMD ["waitress-serve", "--host=0.0.0.0", "--port=5000", "wsgi:app"]
