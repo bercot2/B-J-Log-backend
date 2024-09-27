@@ -12,12 +12,17 @@
 
 # Comandos Docker
 
--Fazer build:
-    - docker-compose up --build
+- Fazer build:
 
--Fazer build específica:
-    - docker-compose up --build <nome-do-servico>
+  - docker-compose build
+
+- Fazer build específica:
+
+  - docker-compose build <nome-do-servico>
+
+- Subir imagem do docker gerada anteriormente
+
+  - docker-compose up
 
 - Subir Containers com a imagem gerada anteriormente
-    - docker run -d -p 8080:5000 b-j-log-backend
-    - docker run -d -p 8081:3000 b-j-log-frontend
+  - docker run -d -p 8080:5000 b-j-log-backend
