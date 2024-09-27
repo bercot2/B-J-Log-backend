@@ -16,8 +16,7 @@
     - docker-compose up --build
 
 -Fazer build específica:
-    - docker-compose up --build backend
-    - docker-compose up --build frontend
+    - docker-compose up --build <nome-do-servico>
 
 - Subir Containers com a imagem gerada anteriormente
     - docker run -d -p 8080:5000 b-j-log-backend

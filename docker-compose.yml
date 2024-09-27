@@ -10,13 +10,3 @@ services:
       - .:/app
     env_file:
       - .env # Variáveis de ambiente para o backend
-
-  frontend:
-    build:
-      context: ../B-J-Log-frontend # Aponta para o repositório/clonagem do frontend
-    container_name: BJLogfrontend
-    image: b-j-log-frontend
-    ports:
-      - "8081:3000"
-    volumes:
-      - ../B-J-Log-frontend:/app
