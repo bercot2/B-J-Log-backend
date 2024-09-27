@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: ./ # Aponta para o backend (onde está o docker-compose)
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env # Variáveis de ambiente para o backend
+
+  frontend:
+    build:
+      context: ../B-J-Log-frontend # Aponta para o repositório/clonagem do frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../B-J-Log-frontend:/app
