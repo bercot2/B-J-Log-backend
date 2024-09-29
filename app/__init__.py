@@ -13,7 +13,13 @@ def create_app():
         app,
         supports_credentials=True,
         resources={
-            r"/*": {"origins": ["http://localhost:8081", "http://BJLogfrontend:3000"]}
+            r"/*": {
+                "origins": [
+                    "http://localhost:5173",
+                    "http://localhost:8081",
+                    "http://frontend:3000",
+                ]
+            }
         },
     )
 

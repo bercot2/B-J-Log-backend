@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:5000"
     volumes:
-      - .:/app
+      - ./app:/app/app
     env_file:
       - .env
     networks:
