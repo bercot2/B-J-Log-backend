@@ -11,7 +11,6 @@ RUN pip install -r requirements.txt
 # Copie o código do backend para o container
 COPY . .
 
-# Exponha a porta 8000 (ou a porta que seu app usa)
 EXPOSE 5000
 
 # Comando para rodar o servidor usando Waitress

@@ -9,4 +9,10 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env # Variáveis de ambiente para o backend
+      - .env
+    networks:
+      - bjlog_network
+
+networks:
+  bjlog_network:
+    external: true

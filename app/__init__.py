@@ -12,7 +12,9 @@ def create_app():
     CORS(
         app,
         supports_credentials=True,
-        resources={r"/*": {"origins": ["http://localhost:8081"]}},
+        resources={
+            r"/*": {"origins": ["http://localhost:8081", "http://BJLogfrontend:3000"]}
+        },
     )
 
     app.config.from_object('app.core.config.Config')
