@@ -3,8 +3,14 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 
-from flask import Blueprint, session, request
-from flask_jwt_extended import create_access_token, set_access_cookies
+from flask import Blueprint, jsonify, session, request
+from flask_jwt_extended import (
+    create_access_token,
+    get_jwt,
+    jwt_required,
+    set_access_cookies,
+    verify_jwt_in_request,
+)
 
 from app.modules.cadastros.models import Usuario
 from app.modules.integracoes.models import Authentication
@@ -85,3 +91,14 @@ def logout():
     response.delete_cookie("csrf_access_token")
 
     return response, HTTPStatus.OK
+
+
+@auth_bp.get("/protected")
+@jwt_required()
+def protected():
+    jwt = get_jwt()
+
+    if jwt.get("csrf") == request.headers.get("X-CSRF-TOKEN", None):
+        return AppResponse({"mesage": "Acesso Válido"}), HTTPStatus.OK
+    else:
+        return AppResponse({"mesage": "Acesso Inválido"}), HTTPStatus.UNAUTHORIZED

@@ -32,7 +32,12 @@ def validate_bearer_token(bearer_token):
 
 
 def check_authentication(app: Flask):
-    if request.endpoint in ["auth.login", "auth.logout", "auth.generate_token"]:
+    if request.endpoint in [
+        "auth.login",
+        "auth.logout",
+        "auth.generate_token",
+        "auth.protected",
+    ]:
         return
 
     token_cookie = request.cookies.get("access_token_cookie")
