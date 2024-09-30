@@ -7,4 +7,4 @@ def init_error_handlers(app):
         if isinstance(e, (ExceptionBase)):
             return e.return_exception()
 
-        return ExceptionBase().return_exception()
+        return ExceptionBase(message=str(e)).return_exception()

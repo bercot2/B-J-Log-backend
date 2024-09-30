@@ -10,6 +10,18 @@
 - flask db upgrade
 - flask db downgrade [#version]
 
+# Definir ambiente do env
+
+- O projeto deverá conter 3 envs sendo eles:
+
+  - .env
+  - .env.production
+  - .env.development
+
+  - Para utilizar o env do ambiente correto, deverá setar o valor "production" ou "development" no arquivo .env para a propriedade FLASK_ENV
+    - FLASK_ENV=development
+    - FLASK_ENV=production
+
 # Comandos Docker
 
 - Criar uma rede external no docker:

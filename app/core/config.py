@@ -1,5 +1,12 @@
-from datetime import timedelta
 import os
+
+from datetime import timedelta
+from dotenv import load_dotenv
+
+env = os.getenv("FLASK_ENV")
+dotenv_path = f".env.{env}"
+
+load_dotenv(dotenv_path, override=True)
 
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_CONNECT')
